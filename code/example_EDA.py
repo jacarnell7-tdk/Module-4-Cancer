@@ -4,6 +4,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sklearn
 # %%
 # Load the data
 ####################################################
@@ -12,6 +13,15 @@ data = pd.read_csv(
 metadata_df = pd.read_csv(
     'c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/data/TRAINING_SET_GSE62944_metadata.csv', index_col=0, header=0)
 print(data.head())
+
+df = pd.read_csv(r'C:\Users\vkb5cq\Desktop\Spring 2026\BME 2315\Module-4-Cancer\Menyhart_JPA_CancerHallmarks_core.txt',sep='\t')
+
+angiogenesis_row = df[df[df.columns[0]] == 'SUSTAINED ANGIOGENESIS']
+
+genes = angiogenesis_row.iloc[0, 1:]  # skip the first column (label)
+genes = genes.dropna()  # remove empty cells
+
+gene_list = genes.tolist()
 
 # %%
 # Explore the data
@@ -42,7 +52,7 @@ GBM_data = data[cancer_samples]
 # %%
 # Subset by index (genes)
 ####################################################
-desired_gene_list = gbm_genes = ["EGFR","TP53","PTEN","IDH1","MGMT","VEGFA","PDGFRA","MYC","CDKN2A"]
+desired_gene_list = gbm_genes = gene_list
 gene_list = [gene for gene in desired_gene_list if gene in GBM_data.index]
 for gene in desired_gene_list:
     if gene not in gene_list:
