@@ -4,7 +4,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import sklearn
+from sklearn.datasets import load_iris
+import seaborn as sns
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
 # %%
 # Load the data
 ####################################################
@@ -109,3 +113,17 @@ plt.title("MYC and EGFR Expression in GBM Samples")
 plt.show()
 
 # %%
+
+X = GBM_gene_data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(X)
+X_pca = PCA(n_components=4).fit_transform(X)
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=X_pca[:, 0],
+                y=X_pca[:, 1],
+                s=100)
+plt.title("PCA of Genes (GBM)")
+plt.xlabel("Principal Component 1")
+plt.ylabel("Principal Component 2")
+plt.show()
