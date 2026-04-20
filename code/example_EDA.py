@@ -16,12 +16,12 @@ from sklearn.preprocessing import StandardScaler
 # =========================================================
 
 data = pd.read_csv(
-    'C:/Users/tta20/OneDrive - University of Virginia/BME 2315 (Comp)/Module 3/Module-3-Fibrosis/Module-4-Cancer/data/TRAINING_SET_GSE62944_subsample_log2TPM.csv',
+    'c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/data/TRAINING_SET_GSE62944_subsample_log2TPM.csv',
     index_col=0, header=0
 )
 
 metadata_df = pd.read_csv(
-    'C:/Users/tta20/OneDrive - University of Virginia/BME 2315 (Comp)/Module 3/Module-3-Fibrosis/Module-4-Cancer/data/TRAINING_SET_GSE62944_metadata.csv',
+    'c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/data/TRAINING_SET_GSE62944_metadata.csv',
     index_col=0, header=0
 )
 
@@ -32,7 +32,7 @@ print(data.head())
 # =========================================================
 
 df = pd.read_csv(
-    r"C:\Users\tta20\Downloads\Menyhart_JPA_CancerHallmarks_core.txt",
+    r"c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/Menyhart_JPA_CancerHallmarks_core.txt",
     sep='\t'
 )
 
