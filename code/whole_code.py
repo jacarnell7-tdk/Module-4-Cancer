@@ -10,12 +10,12 @@ from sklearn.cluster import KMeans
 import umap
 
 data = pd.read_csv(
-    'c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/data/TRAINING_SET_GSE62944_subsample_log2TPM.csv',
+    'C:/Users/tta20/OneDrive - University of Virginia/BME 2315 (Comp)/Module 3/Module-3-Fibrosis/Module-4-Cancer/data/TRAINING_SET_GSE62944_subsample_log2TPM.csv',
     index_col=0
 )
 
 metadata_df = pd.read_csv(
-    'c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/data/TRAINING_SET_GSE62944_metadata.csv',
+    'C:/Users/tta20/OneDrive - University of Virginia/BME 2315 (Comp)/Module 3/Module-3-Fibrosis/Module-4-Cancer/data/TRAINING_SET_GSE62944_metadata.csv',
     index_col=0
 )
 
@@ -27,7 +27,7 @@ print(metadata_df.head())
 print(metadata_df.info())
 
 df = pd.read_csv(
-    r"c:/Users/vkb5cq/Desktop/Spring 2026/BME 2315/Module-4-Cancer/Menyhart_JPA_CancerHallmarks_core.txt",
+    r"C:\Users\tta20\OneDrive - University of Virginia\BME 2315 (Comp)\Module 3\Module-3-Fibrosis\Module-4-Cancer\Menyhart_JPA_CancerHallmarks_core.txt",
     sep='\t'
 )
 
@@ -204,4 +204,51 @@ print(coefficients.sort_values(by="Coefficient", ascending=False).head(10))
 
 print("\nTop genes associated with YOUNGER patients (<=60):")
 print(coefficients.sort_values(by="Coefficient").head(10))
+
+# -----------------------------
+# Visual Confusion Matrix + Error Rate
+# -----------------------------
+from sklearn.metrics import ConfusionMatrixDisplay
+
+# Create confusion matrix
+cm = confusion_matrix(y_val, y_pred)
+
+# Plot confusion matrix
+plt.figure(figsize=(6, 5))
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=["Younger (<=60)", "Older (>60)"]
+)
+
+disp.plot(cmap="Blues", values_format='d')
+
+plt.title("Confusion Matrix for GBM Age Prediction")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+
+plt.show()
+
+# -----------------------------
+# Calculate model error
+# -----------------------------
+accuracy = accuracy_score(y_val, y_pred)
+error_rate = 1 - accuracy
+
+print(f"\nModel Accuracy: {accuracy:.4f}")
+print(f"Model Error Rate: {error_rate:.4f}")
+
+# Optional: Misclassified samples
+misclassified = np.sum(y_val != y_pred)
+
+print(f"Misclassified Patients: {misclassified}")
+print(f"Total Validation Patients: {len(y_val)}")
+
+# Training performance
+y_train_pred = model.predict(X_train_scaled)
+
+train_accuracy = accuracy_score(y_train, y_train_pred)
+
+print(f"Training Accuracy: {train_accuracy:.4f}")
+print(f"Validation Accuracy: {accuracy:.4f}")
 
