@@ -106,19 +106,27 @@ plt.show()
 # -----------------------------
 X = GBM_gene_data.T  # patients as rows
 
-# Define target (gender)
-y = GBM_metadata.loc[X.index, "gender"].map({
-    "MALE": 1,
-    "FEMALE": 0
-})
+# Convert continuous age into binary classification
+# You can adjust cutoff if needed (60 is common in cancer studies)
 
-# Drop missing labels
-valid_idx = y.dropna().index
+age = GBM_metadata.loc[X.index, "age_at_diagnosis"]
+
+# Drop missing ages
+valid_idx = age.dropna().index
 X = X.loc[valid_idx]
-y = y.loc[valid_idx]
+age = age.loc[valid_idx]
+
+# Create binary label: 1 = older, 0 = younger
+age_cutoff = 60
+age = pd.to_numeric(
+    GBM_metadata.loc[X.index, "age_at_diagnosis"],
+    errors="coerce"  # turns bad values into NaN
+)
+y = (age > age_cutoff).astype(int)
 
 print("\nML dataset shape:", X.shape)
-print("Class balance:\n", y.value_counts())
+print("Age summary:\n", age.describe())
+print("\nClass balance (0 = younger, 1 = older):\n", y.value_counts())
 
 # -----------------------------
 # 80/10/10 split
@@ -186,8 +194,14 @@ coefficients = pd.DataFrame({
     "Coefficient": model.coef_[0]
 })
 
-print("\nTop genes predicting MALE:")
+# Add interpretation column (optional but nice)
+coefficients["Interpretation"] = coefficients["Coefficient"].apply(
+    lambda x: "OLDER" if x > 0 else "YOUNGER"
+)
+
+print("\nTop genes associated with OLDER patients (>60):")
 print(coefficients.sort_values(by="Coefficient", ascending=False).head(10))
 
-print("\nTop genes predicting FEMALE:")
+print("\nTop genes associated with YOUNGER patients (<=60):")
 print(coefficients.sort_values(by="Coefficient").head(10))
+
