@@ -168,7 +168,20 @@ X_val_scaled = scaler.transform(X_val)
 # -----------------------------
 from sklearn.linear_model import LogisticRegression
 
-model = LogisticRegression(max_iter=1000)
+# -----------------------------
+# Train Regularized Logistic Regression
+# -----------------------------
+from sklearn.linear_model import LogisticRegression
+
+# L2 Regularization (Ridge)
+model = LogisticRegression(
+    penalty='l2',     # type of regularization
+    C=0.1,            # smaller C = stronger regularization
+    solver='liblinear',
+    max_iter=1000,
+    random_state=42
+)
+
 model.fit(X_train_scaled, y_train)
 
 # -----------------------------
@@ -252,3 +265,16 @@ train_accuracy = accuracy_score(y_train, y_train_pred)
 print(f"Training Accuracy: {train_accuracy:.4f}")
 print(f"Validation Accuracy: {accuracy:.4f}")
 
+# Compare training vs validation accuracy
+y_train_pred = model.predict(X_train_scaled)
+y_val_pred = model.predict(X_val_scaled)
+
+train_accuracy = accuracy_score(y_train, y_train_pred)
+val_accuracy = accuracy_score(y_val, y_val_pred)
+
+print(f"\nTraining Accuracy: {train_accuracy:.4f}")
+print(f"Validation Accuracy: {val_accuracy:.4f}")
+
+# Overfitting gap
+gap = train_accuracy - val_accuracy
+print(f"Overfitting Gap: {gap:.4f}")
